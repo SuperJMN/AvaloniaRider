@@ -1,20 +1,17 @@
-# AvaloniaRider [![JetBrains Plugins Repository](https://img.shields.io/jetbrains/plugin/v/14839.svg?label=rider%20&colorB=0A7BBB&style=flat-square)][marketplace]
+# Avalonia Previewer
+
+> **Community Fork**: This is a community-maintained fork of the original [AvaloniaRider](https://github.com/ForNeVeR/AvaloniaRider) plugin by [Friedrich von Never (ForNeVeR)](https://github.com/ForNeVeR) and contributors. 
+>
+> Temporary community build intended to fix current blocking issues until official plugin updates are available.
+> 
+> Licensed under the MIT License. Original project: https://github.com/ForNeVeR/AvaloniaRider
 
 Install
 -------
 
-### Stable Release
+This community fork is available for manual installation. Download the latest release from the [releases page][releases] and install it via **Settings → Plugins → Install Plugin from Disk**.
 
-Either search for Avalonia on the **Plugins** settings page or [visit the Plugin Marketplace][marketplace].
-
-### Development Release
-
-To install a development release (automatically published for every push into a development branch), first add the custom plugin repository into your IDE (see [the documentation][ide.channels] on how to do that).
-
-**Custom plugin repository address:**
-`https://plugins.jetbrains.com/plugins/dev/14839`
-
-Then, install the plugin as usual via the IDE plugin settings screen.
+[releases]: https://github.com/SuperJMN/AvaloniaRider/releases
 
 How to Use
 ----------
@@ -88,4 +85,4 @@ Documentation
 [ide.channels]: https://www.jetbrains.com/help/idea/managing-plugins.html#repos
 [live-templates]: https://www.jetbrains.com/help/rider/Using_Live_Templates.html
 [preview-screenshot]: ./docs/preview-screenshot.png
-[marketplace]: https://plugins.jetbrains.com/plugin/14839-avaloniarider/
+[marketplace]: https://github.com/SuperJMN/AvaloniaRider

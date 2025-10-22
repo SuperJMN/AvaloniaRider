@@ -1,7 +1,11 @@
 The MIT License
 ===============
 
-Copyright (C) 2025 AvaloniaRider contributors
+Copyright (C) 2025 SuperJMN and contributors
+
+Based on AvaloniaRider by Friedrich von Never (ForNeVeR) and contributors
+Original project: https://github.com/ForNeVeR/AvaloniaRider
+Copyright (C) 2019-2025 AvaloniaRider contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
