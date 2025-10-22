@@ -31,7 +31,7 @@ repositories {
 }
 
 val dotNetPluginId = "AvaloniaRider.Plugin"
-val intellijPluginId = "avalonia-rider"
+val intellijPluginId = "avalonia-previewer"
 
 val pluginVersionBase: String by project
 val buildRelease: String by project

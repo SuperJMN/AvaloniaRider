@@ -1,16 +1,22 @@
 <idea-plugin require-restart="true">
-    <id>avalonia-rider</id>
-    <name>AvaloniaRider</name>
+    <id>avalonia-previewer</id>
+    <name>Avalonia Previewer</name>
     <version>_PLACEHOLDER_</version>
-    <vendor url="https://fornever.me">fvnever</vendor>
+    <vendor url="https://github.com/SuperJMN">SuperJMN</vendor>
 
     <depends>com.intellij.modules.rider</depends>
     <depends>com.jetbrains.xaml.previewer</depends>
 
-    <description>
-        This is the Avalonia integration for JetBrains Rider. It adds a live
-        preview for Avalonia XAML files.
-    </description>
+    <description><![CDATA[
+        Community fork of the Avalonia integration for JetBrains Rider. 
+        Adds a live preview for Avalonia XAML files and additional features.
+        <br/><br/>
+        <strong>Based on the original AvaloniaRider plugin by Friedrich von Never (fvnever) and contributors.</strong>
+        <br/>
+        Original project: <a href="https://github.com/ForNeVeR/AvaloniaRider">https://github.com/ForNeVeR/AvaloniaRider</a>
+        <br/><br/>
+        Licensed under the MIT License.
+    ]]></description>
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable groupId="language"
                              key="settings.page.name"
