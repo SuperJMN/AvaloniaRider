@@ -1,6 +1,6 @@
 <idea-plugin require-restart="true">
-    <id>avalonia-rider</id>
-    <name>AvaloniaRider</name>
+    <id>avaloniapreviewer</id>
+    <name>Avalonia Previewer</name>
     <version>_PLACEHOLDER_</version>
     <vendor url="https://fornever.me">fvnever</vendor>
 

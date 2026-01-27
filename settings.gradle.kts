@@ -1,4 +1,4 @@
-rootProject.name = "avaloniarider"
+rootProject.name = "avaloniapreviewer"
 include(":protocol")
 
 pluginManagement {
