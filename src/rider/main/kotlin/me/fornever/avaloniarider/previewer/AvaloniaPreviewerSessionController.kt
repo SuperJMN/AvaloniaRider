@@ -42,6 +42,7 @@ import me.fornever.avaloniarider.exceptions.AvaloniaPreviewerExecutionException
 import me.fornever.avaloniarider.exceptions.AvaloniaPreviewerInitializationException
 import me.fornever.avaloniarider.idea.concurrency.adviseOnUiThread
 import me.fornever.avaloniarider.idea.settings.AvaloniaPreviewerMethod
+import me.fornever.avaloniarider.idea.settings.AvaloniaPreviewerTheme
 import me.fornever.avaloniarider.idea.settings.AvaloniaProjectSettings
 import me.fornever.avaloniarider.rd.compose
 import me.fornever.avaloniarider.rider.AvaloniaRiderProjectModelHost
@@ -64,7 +65,9 @@ class AvaloniaPreviewerSessionController(
     private val consoleView: ConsoleView?,
     private val xamlFile: VirtualFile,
     private val projectFilePathProperty: IOptPropertyView<Path>,
-    private val baseDocument: Document?) {
+    private val baseDocument: Document?,
+    private val selectedTheme: IPropertyView<AvaloniaPreviewerTheme>
+) {
     companion object {
         private val logger = Logger.getInstance(AvaloniaPreviewerSessionController::class.java)
 
@@ -180,6 +183,43 @@ class AvaloniaPreviewerSessionController(
             }
     }
 
+    // Inject theme code after first > tag and send to previewer
+    private fun injectThemeIfNeeded(originalXaml: String): String {
+        val theme = selectedTheme.value
+        val settings = AvaloniaProjectSettings.getInstance(project)
+        val themeStyle = when (theme) {
+            AvaloniaPreviewerTheme.Light -> settings.lightThemeStyle
+            AvaloniaPreviewerTheme.Dark -> settings.darkThemeStyle
+            else -> return originalXaml
+        }
+
+        val firstTagStart = originalXaml.indexOf('<')
+        if (firstTagStart == -1) return originalXaml
+
+        // <TagName props...> or <TagName><TagName/> or <TagName/>
+        val tagNameEnd = originalXaml.indexOfAny(charArrayOf(' ', '>', '/'), firstTagStart + 1)
+        if (tagNameEnd == -1) return originalXaml
+
+        val tagName = originalXaml.substring(firstTagStart + 1, tagNameEnd)
+
+        // Only inject if the file is a UserControl
+        val tagList = settings.themeApplicableTags.split(',').map { it.trim() }
+        if (tagName !in tagList) {
+            return originalXaml
+        }
+
+        val firstTagEnd = originalXaml.indexOf('>')
+        if (firstTagEnd == -1) return originalXaml
+
+        return buildString {
+            append(originalXaml.substring(0, firstTagEnd + 1))
+            append("\n")
+            append(themeStyle)
+            append("\n")
+            append(originalXaml.substring(firstTagEnd + 1))
+        }
+    }
+
     private suspend fun getProjectContainingFile(virtualFile: VirtualFile): ProjectModelEntity?  =
         suspendCancellableCoroutine { cont ->
             Lifetime.using { lt ->
@@ -231,13 +271,14 @@ class AvaloniaPreviewerSessionController(
             if (document == null) {
                 logger.warn("Unable to obtain document for $xamlFile")
                 return@advise
-            }
+
             val documentUpdates = MutableSharedFlow<Unit>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
             suspend fun dispatchXamlUpdate() {
                 while (lifetime.isAlive) {
                     val (text, projectRelativePath) = readAction {
-                        document.text to computeDocumentPathInProject(projectFilePathProperty.valueOrNull)
+                        injectThemeIfNeeded(document.text) to
+                            computeDocumentPathInProject(projectFilePathProperty.valueOrNull)
                     }
                     val effectivePath = projectRelativePath ?: lastKnownProjectRelativePath
                     if (effectivePath == null) {
@@ -270,6 +311,9 @@ class AvaloniaPreviewerSessionController(
                 .advise(lifetime) {
                     documentUpdates.tryEmit(Unit)
                 }
+            selectedTheme.advise(lifetime) {
+                documentUpdates.tryEmit(Unit)
+            }
             documentUpdates.tryEmit(Unit)
         }
 
