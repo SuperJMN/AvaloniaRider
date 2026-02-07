@@ -271,6 +271,7 @@ class AvaloniaPreviewerSessionController(
             if (document == null) {
                 logger.warn("Unable to obtain document for $xamlFile")
                 return@advise
+            }
 
             val documentUpdates = MutableSharedFlow<Unit>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
