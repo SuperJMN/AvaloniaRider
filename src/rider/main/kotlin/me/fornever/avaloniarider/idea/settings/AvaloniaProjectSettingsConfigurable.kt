@@ -3,10 +3,7 @@ package me.fornever.avaloniarider.idea.settings
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
 import com.intellij.ui.SimpleListCellRenderer
-import com.intellij.ui.dsl.builder.bindIntText
-import com.intellij.ui.dsl.builder.bindItem
-import com.intellij.ui.dsl.builder.bindSelected
-import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.builder.*
 import me.fornever.avaloniarider.AvaloniaRiderBundle
 import javax.swing.JList
 
@@ -30,6 +27,12 @@ class AvaloniaProjectSettingsConfigurable(private val project: Project) : Config
                 checkBox(AvaloniaRiderBundle.message("settings.synchronizeWithRunConfiguration")).bindSelected(
                     { projectSettings.synchronizeWithRunConfiguration },
                     { projectSettings.state.synchronizeWithRunConfiguration = it }
+                )
+            }
+            row {
+                checkBox(AvaloniaRiderBundle.message("settings.useShadowCopy")).bindSelected(
+                    { projectSettings.useShadowCopy },
+                    { projectSettings.state.useShadowCopy = it }
                 )
             }
             row(AvaloniaRiderBundle.message("settings.fpsLimit")) {
@@ -60,6 +63,42 @@ class AvaloniaProjectSettingsConfigurable(private val project: Project) : Config
                             it ?: WorkingDirectorySpecification.DefinedByMsBuild
                     }
                 )
+            }
+            row(AvaloniaRiderBundle.message("settings.theme.applicableElements")) {
+                textField().bindText(
+                    { projectSettings.themeApplicableTags },
+                    { projectSettings.state.themeApplicableTags = it }
+                ).comment(AvaloniaRiderBundle.message("settings.theme.applicableElements.comment"))
+            }
+            row(AvaloniaRiderBundle.message("settings.theme.defaultTheme")) {
+                comboBox(AvaloniaPreviewerTheme.entries).bindItem(
+                    { projectSettings.defaultTheme },
+                    { projectSettings.state.defaultTheme = it ?: AvaloniaPreviewerTheme.None },
+                )
+            }
+            row {
+                checkBox(AvaloniaRiderBundle.message("settings.theme.showThemeSelector")).bindSelected(
+                    { projectSettings.showThemeSelector },
+                    { projectSettings.state.showThemeSelector = it }
+                )
+            }
+            row(AvaloniaRiderBundle.message("settings.theme.darkTheme")) {
+                textArea()
+                    .rows(5)
+                    .columns(35)
+                    .bindText(
+                        { projectSettings.darkThemeStyle },
+                        { projectSettings.state.darkThemeStyle = it }
+                    )
+            }
+            row(AvaloniaRiderBundle.message("settings.theme.lightTheme")) {
+                textArea()
+                    .rows(5)
+                    .columns(35)
+                    .bindText(
+                        { projectSettings.lightThemeStyle },
+                        { projectSettings.state.lightThemeStyle = it }
+                    )
             }
             group(AvaloniaRiderBundle.message("settings.application-wide.label")) {
                 row {

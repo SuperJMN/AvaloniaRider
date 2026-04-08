@@ -37,6 +37,7 @@ import com.jetbrains.rider.xaml.splitEditor.XamlSplitEditorSplitLayout
 import kotlinx.coroutines.Dispatchers
 import me.fornever.avaloniarider.AvaloniaRiderBundle
 import me.fornever.avaloniarider.idea.editor.actions.*
+import me.fornever.avaloniarider.idea.settings.AvaloniaProjectSettings
 import me.fornever.avaloniarider.previewer.AvaloniaPreviewerSessionController
 import me.fornever.avaloniarider.ui.bindVisible
 import java.awt.BorderLayout
@@ -148,13 +149,17 @@ abstract class AvaloniaPreviewEditorBase(
     private val selectedProjectPath = assemblySelectorAction.selectedProjectPath
     private val baseDocument: Document? =
         application.runReadAction<Document?> { FileDocumentManager.getInstance().getDocument(file) }
+
+    private val projectSettings = AvaloniaProjectSettings.getInstance(project)
+    private val selectedTheme = Property(projectSettings.defaultTheme)
     protected val sessionController = AvaloniaPreviewerSessionController(
         project,
         lifetime,
         consoleView,
         file,
         selectedProjectPath,
-        baseDocument
+        baseDocument,
+        selectedTheme
     )
     init {
         lifetime.launch(Dispatchers.EDT) {
@@ -319,6 +324,9 @@ abstract class AvaloniaPreviewEditorBase(
         actionGroup.apply {
             add(getShowErrorAction(toolbar))
             add(assemblySelectorAction)
+            if (projectSettings.showThemeSelector) {
+                add(ThemeSelectorAction(selectedTheme))
+            }
             add(RestartPreviewerAction(lifetime, sessionController, selectedProjectPath))
             add(ToggleDetachedPreviewAction(this@AvaloniaPreviewEditorBase))
             addAll(*actions)
